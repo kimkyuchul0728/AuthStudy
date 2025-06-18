@@ -11,17 +11,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users_tb")
-public class User {
+@Table(name = "members_tb")
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "users_id")
+    @Column(name = "member_id")
     private Integer id;
 
-    private String username;
+    private String memberName;
     private String password;
-    private String fullName;
+    private String name ;
     private String email;
-
 }
