@@ -1,4 +1,4 @@
-package com.korit.authstudy.service;
+package com.korit.authstudy.security.service;
 
 import com.korit.authstudy.dto.LoginStatusDto;
 import com.korit.authstudy.exception.BearerValidException;

@@ -55,7 +55,7 @@ public class SecurityConfig {
 
         // 특정 요청 URL에 대한 권한 설정
         http.authorizeHttpRequests(auth -> {
-            auth.requestMatchers("/api/users", "/api/users/login", "/api/users/login/status").permitAll();
+            auth.requestMatchers("/api/users", "/api/users/login", "/api/users/login/status", "/api/users/principal").permitAll();
             auth.anyRequest().authenticated();
         });
 

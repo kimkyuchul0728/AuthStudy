@@ -3,7 +3,6 @@ package com.korit.authstudy.security.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +44,7 @@ public class JwtUtil {
         return bearerToken.replaceFirst("Bearer ", "");
     }
 
-    public Claims getClaims(String token) {
+    public Claims getClaims(String token) throws JwtException {
         JwtParserBuilder jwtParserBuilder = Jwts.parser();
         jwtParserBuilder.setSigningKey(KEY);
         JwtParser jwtParser = jwtParserBuilder.build();

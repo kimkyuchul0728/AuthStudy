@@ -3,12 +3,12 @@ package com.korit.authstudy.controller;
 import com.korit.authstudy.dto.JwtDto;
 import com.korit.authstudy.dto.LoginDto;
 import com.korit.authstudy.dto.UserRegisterDto;
-import com.korit.authstudy.service.JwtService;
+import com.korit.authstudy.security.service.JwtService;
 import com.korit.authstudy.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -39,4 +39,8 @@ public class UsersController {
         return ResponseEntity.ok(jwtService.validAccessToken(authorization));
     }
 
+    @GetMapping("/principal")
+    public ResponseEntity<?> getPrincipalUser() {
+        return ResponseEntity.ok(SecurityContextHolder.getContext().getAuthentication());
+    }
 }
