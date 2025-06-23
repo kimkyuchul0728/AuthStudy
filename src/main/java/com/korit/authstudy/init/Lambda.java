@@ -40,7 +40,7 @@ public class Lambda implements CommandLineRunner {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                System.out.println("user객체 못 찾아서 여기서 다른 작업해줄거임.");
+//                System.out.println("user객체 못 찾아서 여기서 다른 작업해줄거임.");
             }
         };
         optionalStudy.ifPresentOrElse(consumer, runnable);
@@ -49,7 +49,7 @@ public class Lambda implements CommandLineRunner {
             System.out.println("user객체 찾음");
         };
         Runnable runnableLambda = () -> {
-            System.out.println("User객체 못찾아서 여기서 다른 작업 해줄거임");
+//            System.out.println("User객체 못찾아서 여기서 다른 작업 해줄거임");
         };
         optionalStudy.ifPresentOrElse(consumerLambda, runnableLambda);
 
@@ -58,7 +58,7 @@ public class Lambda implements CommandLineRunner {
                 System.out.println("user객체 찾음");
             },
             () -> {
-                System.out.println("User객체 못찾아서 여기서 다른 작업 해줄거임");
+//                System.out.println("User객체 못찾아서 여기서 다른 작업 해줄거임");
             }
         );
     }

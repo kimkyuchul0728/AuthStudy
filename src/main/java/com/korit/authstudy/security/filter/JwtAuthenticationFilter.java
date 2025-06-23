@@ -6,11 +6,9 @@ import com.korit.authstudy.security.jwt.JwtUtil;
 import com.korit.authstudy.security.model.PrincipalUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
-import io.swagger.v3.oas.models.PathItem;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -52,13 +50,14 @@ public class JwtAuthenticationFilter implements Filter {
                             .userId(user.getId())
                             .username(user.getUsername())
                             .password(user.getPassword())
+                            .fullName(user.getFullName())
+                            .email(user.getEmail())
                             .build();
                     Authentication authentication = new UsernamePasswordAuthenticationToken(principalUser, "", principalUser.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     System.out.println("인증 성공");
                     System.out.println(authentication.getName());
                 }, () -> {
-                    // 예외처리
                     throw new AuthenticationServiceException("인증 실패");
                 });
 

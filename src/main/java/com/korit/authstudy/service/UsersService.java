@@ -1,16 +1,18 @@
 package com.korit.authstudy.service;
 
 import com.korit.authstudy.domain.entity.User;
-import com.korit.authstudy.dto.JwtDto;
-import com.korit.authstudy.dto.LoginDto;
-import com.korit.authstudy.dto.UserRegisterDto;
+import com.korit.authstudy.dto.*;
+import com.korit.authstudy.mapper.UsersMapper;
 import com.korit.authstudy.repository.UsersRepository;
 import com.korit.authstudy.security.jwt.JwtUtil;
+import com.korit.authstudy.security.model.PrincipalUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.RollbackOn;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.CredentialNotFoundException;
 import java.util.List;
@@ -22,6 +24,7 @@ public class UsersService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final UsersRepository usersRepository;
     private final JwtUtil jwtUtil;
+    private final UsersMapper usersMapper;
 
     public User register(UserRegisterDto dto) {
         User insertedUser = usersRepository.save(dto.toEntity(passwordEncoder));
@@ -40,5 +43,28 @@ public class UsersService {
         System.out.println("로그인 성공 토큰 생성");
         String token = jwtUtil.generateAccessToken(user.getId().toString());
         return JwtDto.builder().accessToken(token).build();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void modifyFullNameOrEmail(Integer userId, UserModifyDto dto) {
+        User user = dto.toEntity(userId);
+        usersRepository.updateFullNameOrEmailById(user);
+//        int updateCount = usersMapper.updateFullNameOrEmailById(user);
+//        System.out.println(updateCount);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void modifyPassword(UserPasswordModifyDto dto, PrincipalUser principalUser) {
+        // 1. 현재 로그인 되어있는 비밀번호와 요청때 받은 현재 비밀번호가 일치하는지.
+        if (!passwordEncoder.matches(dto.getOldPassword(), principalUser.getPassword())) {
+            throw new BadCredentialsException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        // 2. 새 비밀번호와 새 비밀번호 확인이 일피하는지
+        if (!dto.getNewPassword().equals(dto.getNewPasswordCheck())) {
+            throw new BadCredentialsException("새 비밀번호가 일치하지 않습니다.");
+        }
+        String encodedPassword = passwordEncoder.encode(dto.getNewPassword());
+        usersMapper.updatePassword(principalUser.getUserId(), encodedPassword);
     }
 }
